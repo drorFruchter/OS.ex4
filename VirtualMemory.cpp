@@ -89,25 +89,12 @@ uint64_t DFS(uint64_t virtualAddress) {
         }
         else {
             cur_frame = cur_val;
-            level++;
         }
+        level++;
     }
     offset = bit_set_for_level(virtualAddress, level);
     cur_address = (cur_frame * OFFSET_WIDTH) + offset;
     return cur_address;
-    
-    
-    // int max_val = 0;
-    
-    // word_t* first_page;
-    // int page_pointer = isolate_first_bits(virtualAddress);
-    // PMread(page_pointer, first_page);
-    // if (first_page == 0) {
-    //     int* max_idx;
-    //     *max_idx = 0;
-    //     max_free_idx(0, max_idx);
-    //     create_new_table(page_pointer, max_idx);
-    // }
 }
 
 
@@ -122,8 +109,7 @@ void VMinitialize()
 
 int VMread(uint64_t virtualAddress, word_t* value)
 {
-    word_t* first_page;
-    PMread(isolate_first_bits(virtualAddress), first_page);
+    
 }
 
 int VMwrite(uint64_t virtualAddress, word_t value) {
