@@ -29,6 +29,25 @@ uint64_t bit_set_for_level (uint64_t virtualAddress, int tree_lvl) {
     return (ret_val & create_ones_of_len(OFFSET_WIDTH));
 }
 
+bool is_frame_free(uint64_t address) {
+    int temp_val = 0;
+    for (int i = 0; i < PAGE_SIZE; i++) {
+        PMread((address+i), &temp_val);
+        if (temp_val != 0){
+            return false;
+        }
+    }
+    return true;
+}
+
+/**
+ * 
+ * @return -1 if it there is no free frame
+ */
+uint64_t dfs_free_frame() {
+    uint64_t cur_cell = 0;
+
+}
 
 int VMread(uint64_t virtualAddress, word_t* value) {
 
