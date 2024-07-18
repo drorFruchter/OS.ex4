@@ -35,16 +35,16 @@ uint64_t bit_set_for_level (uint64_t virtualAddress, int tree_lvl) {
     return (ret_val & create_ones_of_len(OFFSET_WIDTH));
 }
 
-// bool is_frame_free(uint64_t address) {
-//     int temp_val = 0;
-//     for (int i = 0; i < PAGE_SIZE; i++) {
-//         PMread((address+i), &temp_val);
-//         if (temp_val != 0){
-//             return false;
-//         }
-//     }
-//     return true;
-// }
+bool is_frame_free(uint64_t address) {
+    int temp_val = 0;
+    for (int i = 0; i < PAGE_SIZE; i++) {
+        PMread((address+i), &temp_val);
+        if (temp_val != 0){
+            return false;
+        }
+    }
+    return true;
+}
 
 // /**
 //  *
@@ -70,6 +70,18 @@ void max_free_idx(uint64_t address, int *max_val) {
         }
     }
 }
+
+
+
+
+void find_new_frame(uint64_t physical_address){
+    
+}
+
+
+
+
+
 
 uint64_t DFS(uint64_t virtualAddress) {
     int max_val = 0;
@@ -101,6 +113,12 @@ uint64_t DFS(uint64_t virtualAddress) {
 
 
 
+
+
+
+
+
+
 void VMinitialize()
 {
     create_new_table(0, 0);
@@ -108,9 +126,11 @@ void VMinitialize()
 
 int VMread(uint64_t virtualAddress, word_t* value)
 {
-    
+    uint64_t cur_address = DFS(virtualAddress);
+    PMread(cur_address, value);
 }
 
 int VMwrite(uint64_t virtualAddress, word_t value) {
-
+    uint64_t cur_address = DFS(virtualAddress);
+    PMwrite(cur_address, value);
 }
