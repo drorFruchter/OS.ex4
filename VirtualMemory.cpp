@@ -29,7 +29,7 @@ uint64_t create_ones_of_len (int len) {
 
 uint64_t bit_set_for_level (uint64_t virtualAddress, int tree_lvl) {
     // int num_levels = (int) (WORD_WIDTH / OFFSET_WIDTH);
-    int num_shifts = (TABLES_DEPTH -1) * OFFSET_WIDTH;
+    int num_shifts = (TABLES_DEPTH - tree_lvl - 1) * OFFSET_WIDTH;
     // int num_shifts = (num_levels - tree_lvl) * OFFSET_WIDTH;
     uint64_t ret_val =  virtualAddress >> num_shifts;
     return (ret_val & create_ones_of_len(OFFSET_WIDTH));
@@ -47,18 +47,17 @@ uint64_t bit_set_for_level (uint64_t virtualAddress, int tree_lvl) {
 // }
 
 // /**
-//  * 
+//  *
 //  * @return -1 if it there is no free frame
 //  */
 // uint64_t dfs_free_frame() {
 //     uint64_t cur_cell = 0;
-
 // }
 
 /**
  * goes over the entire tree and finds the greatest number in use
- * does it recursvly. 
- * when initialize, enter adress 0 first and give it a pointer to a max val 
+ * does it recursvly.
+ * when initialize, enter adress 0 first and give it a pointer to a max val
  * that will also be 0.
  */
 void max_free_idx(uint64_t address, int *max_val) {
