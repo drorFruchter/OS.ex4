@@ -2,11 +2,15 @@
 #include "PhysicalMemory.h"
 #include "MemoryConstants.h"
 
-void VMinitialize()
+void create_new_table(uint64_t physicalAddress, int frame)
 {
-    for (int i=0; i<PAGE_SIZE;i++)
+    if (frame != 0)
     {
-        PMwrite(i, 0);
+        PMwrite(physicalAddress, frame);
+    }
+    for (long long address = frame * PAGE_SIZE; address < (frame + 1) * PAGE_SIZE; address++)
+    {
+        PMwrite(address, 0);
     }
 }
 
@@ -14,8 +18,9 @@ uint64_t create_ones_of_len (int len) {
     return (1ULL << len) - 1;
 }
 
-uint64_t isolate_first_bits(uint64_t virtualAddress) {
-    int len_to_move =(int) (WORD_WIDTH / OFFSET_WIDTH);
+int isolate_first_bits(uint64_t virtualAddress)
+{
+    int len_to_move = (WORD_WIDTH / OFFSET_WIDTH);
     len_to_move = len_to_move * OFFSET_WIDTH;
     uint64_t ret_val =  virtualAddress >> len_to_move;
     int delta = WORD_WIDTH % OFFSET_WIDTH;
@@ -48,12 +53,16 @@ uint64_t dfs_free_frame() {
     uint64_t cur_cell = 0;
 
 }
-
-int VMread(uint64_t virtualAddress, word_t* value) {
-
+void VMinitialize()
+{
+    create_new_table(0, 0);
 }
 
-
+int VMread(uint64_t virtualAddress, word_t* value)
+{
+    word_t* first_page;
+    PMread(isolate_first_bits(virtualAddress), first_page);
+}
 
 int VMwrite(uint64_t virtualAddress, word_t value) {
 
