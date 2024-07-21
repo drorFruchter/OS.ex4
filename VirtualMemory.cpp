@@ -22,7 +22,7 @@ word_t cyclic_calculation(uint64_t cur_page, uint64_t new_page){
     int temp_val = (int) (cur_page - new_page);
     if (temp_val < 0){temp_val = -1 * temp_val;}
     word_t cur_val = (word_t) min_func (NUM_PAGES - temp_val, temp_val);
-    return cur_val
+    return cur_val;
 }
 
 
@@ -32,11 +32,11 @@ uint64_t DFS(uint64_t cur_frame,
              uint64_t* max_cyclic_value,
              word_t* page_to_evict,
              word_t* frame_to_evict,
-             uin64_t* address_to_remove,
+             uint64_t* address_to_remove,
              uint64_t target_page,
              uint64_t current_page,
-             int depth,
-            ) 
+             int depth
+            )
 {
     bool is_empty_table = true;
     word_t next_frame = 0;
@@ -56,17 +56,26 @@ uint64_t DFS(uint64_t cur_frame,
                     *max_cyclic_value = currentCalc;
                     *frame_to_evict = cur_frame;
                     *page_to_evict = (word_t) current_page;
-                    *addres_to_remove = address_of_next_frame;
+                    *address_to_remove = address_of_next_frame;
                 }
             }
             else {
                 //DFS - keep travrsing the tree
-                DFS(next_frame, address_of_next_frame, max_frame_num, max_cyclic_value, page_to_evict, frame_to_evict,                                 address_to_remove, target_page, current_page, depth + 1);
+                // maybe address_of_next_frame is deleted?
+                DFS(next_frame,
+                    &address_of_next_frame,
+                    max_frame_num, max_cyclic_value,
+                    page_to_evict,
+                    frame_to_evict,
+                    address_to_remove,
+                    target_page,
+                    current_page,
+                    depth + 1);
             }
         }
     }
     if (is_empty_table) { // option 1
-        PMwrite(*prevous_address, 0); // make sure to delete from previous table
+        PMwrite(*previous_address, 0); // make sure to delete from previous table
         return cur_frame;
     }
     return 0;
@@ -80,10 +89,10 @@ void VMinitialize()
 
 int VMread(uint64_t virtualAddress, word_t* value)
 {
-   
+
 }
 
-int VMwrite(uint64_t virtualAddress, word_t value) 
+int VMwrite(uint64_t virtualAddress, word_t value)
 {
-    
+
 }
