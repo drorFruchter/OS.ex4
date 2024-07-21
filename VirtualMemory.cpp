@@ -30,8 +30,8 @@ uint64_t DFS(uint64_t cur_frame,
              uint64_t* previous_address,
              int* max_frame_num,
              uint64_t* max_cyclic_value,
-             uint64_t* page_to_evict,
-             uint64_t* frame_to_evict,
+             word_t* page_to_evict,
+             word_t* frame_to_evict,
              uin64_t* address_to_remove,
              uint64_t target_page,
              uint64_t current_page,
@@ -61,13 +61,15 @@ uint64_t DFS(uint64_t cur_frame,
             }
             else {
                 //DFS - keep travrsing the tree
+                DFS(next_frame, address_of_next_frame, max_frame_num, max_cyclic_value, page_to_evict, frame_to_evict,                                 address_to_remove, target_page, current_page, depth + 1);
             }
         }
     }
     if (is_empty_table) { // option 1
-        // make sure to delete from previous table
+        PMwrite(*prevous_address, 0); // make sure to delete from previous table
         return cur_frame;
     }
+    return 0;
 }
 
 
