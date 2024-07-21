@@ -1,4 +1,7 @@
 #include "VirtualMemory.h"
+
+#include <float.h>
+
 #include "PhysicalMemory.h"
 #include "MemoryConstants.h"
 
@@ -72,10 +75,36 @@ void max_free_idx(uint64_t address, int *max_val) {
 }
 
 
+uint64_t find_empty_frame(uint64_t address, int depth) {
+    // todo - how do we know we've reached a leaf?
+    if (depth == TABLES_DEPTH){return 0;}
+    for (int i = 0 ; i < PAGE_SIZE; i++) {
+        int optional_frame = 0;
+        PMread(address+i, &optional_frame);
+        if ((optional_frame!=0) && (is_frame_free(optional_frame))) {
+            return optional_frame;
+        }
+        if (optional_frame!=0) {
+            uint64_t temp = find_empty_frame(optional_frame, depth+1);
+            if (temp != 0) {
+                return temp;
+            }
+        }
+    }
+    // todo - not sure that it's the right place
+    return 0;
+}
+
+uint64_t find_not_used_frame(uint64_t adress) {
+
+}
 
 
-void find_new_frame(uint64_t physical_address){
-    
+uint64_t find_new_frame(uint64_t* address_to_fill) {
+    uint64_t frame = 0;
+    frame = find_empty_frame(0,0);
+    if (frame != 0){return frame;}
+
 }
 
 
