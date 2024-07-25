@@ -33,6 +33,7 @@ uint64_t DFS(uint64_t cur_frame,
              word_t* page_to_evict,
              word_t* frame_to_evict,
              uint64_t* address_to_remove,
+             uint64_t* empty_table,
              uint64_t target_page,
              uint64_t current_page,
              int depth
@@ -51,10 +52,10 @@ uint64_t DFS(uint64_t cur_frame,
                 *max_frame_num = next_frame;
             }
             if (depth == TABLES_DEPTH - 1) { // option 3 - evict page from frame
-                word_t currentCalc = cyclic_calculation(current_page, target_page);
-                if (*max_cyclic_value < currentCalc) {
-                    *max_cyclic_value = currentCalc;
-                    *frame_to_evict = cur_frame;
+                word_t current_calc = cyclic_calculation(current_page, target_page);
+                if (*max_cyclic_value < current_calc) {
+                    *max_cyclic_value = current_calc;
+                    *frame_to_evict = (word_t) cur_frame;
                     *page_to_evict = (word_t) current_page;
                     *address_to_remove = address_of_next_frame;
                 }
@@ -64,10 +65,12 @@ uint64_t DFS(uint64_t cur_frame,
                 // maybe address_of_next_frame is deleted?
                 DFS(next_frame,
                     &address_of_next_frame,
-                    max_frame_num, max_cyclic_value,
+                    max_frame_num,
+                    max_cyclic_value,
                     page_to_evict,
                     frame_to_evict,
                     address_to_remove,
+                    empty_table,
                     target_page,
                     current_page,
                     depth + 1);
@@ -75,8 +78,8 @@ uint64_t DFS(uint64_t cur_frame,
         }
     }
     if (is_empty_table) { // option 1
-        PMwrite(*previous_address, 0); // make sure to delete from previous table
-        return cur_frame;
+        *empty_table = cur_frame;
+        address_to_remove = previous_address;
     }
     return 0;
 }
