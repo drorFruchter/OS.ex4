@@ -73,7 +73,7 @@ void DFS(uint64_t cur_frame,
                 word_t current_calc = cyclic_calculation(current_page, target_page);
                 if (*max_cyclic_value < current_calc) {
                     *max_cyclic_value = current_calc;
-                    *frame_to_evict = (word_t) cur_frame;
+                    *frame_to_evict = (word_t) next_frame;
                     *page_to_evict = (word_t) current_page;
                     *address_to_remove = address_of_next_frame;
                 }
@@ -156,7 +156,7 @@ uint64_t restore_page (uint64_t page_num, uint64_t table)
  */
 void virt_address_to_vec (uint64_t address, uint64_t *vec_to_fill)
 {
-    for (int i = 0; i < TABLES_DEPTH; i++)
+    for (int i = 0; i < TABLES_DEPTH + 1; i++)
     {
         vec_to_fill[i] = address & (x_power_y (2, OFFSET_WIDTH) - 1);
         address = address >> OFFSET_WIDTH;
