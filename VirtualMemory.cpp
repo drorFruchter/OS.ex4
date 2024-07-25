@@ -90,7 +90,7 @@ void DFS(uint64_t cur_frame,
                     empty_table,
                     target_page,
                     current_page,
-                    parrent_table,
+                    parent_table,
                     final_parent_table,
                     current_working_tbale,
                     depth + 1);
@@ -132,7 +132,7 @@ word_t find_frame(uint64_t target_page, uint64_t parent_table)
     if (empty_table != parent_table && empty_table != 0) {
         PMwrite(final_parent_table, 0);
         next_frame = (word_t) empty_table;
-    })
+    }
     else if (max_frame == NUM_FRAMES - 1) {
         PMevict(frame_to_evict, page_to_evict);
         PMwrite(address_to_remove, 0);
@@ -156,10 +156,10 @@ uint64_t restore_page (uint64_t page_num, uint64_t table)
  */
 void virt_address_to_vec (uint64_t address, uint64_t *vec_to_fill)
 {
-    for (int i = 0; i < TABLE_DEPTH; i++)
+    for (int i = 0; i < TABLES_DEPTH; i++)
     {
-        vec_to_fill[i] = adress & (x_power_y (2, OFFSET_WIDTH) - 1);
-        address = address >> OFFSET_WIDTH
+        vec_to_fill[i] = address & (x_power_y (2, OFFSET_WIDTH) - 1);
+        address = address >> OFFSET_WIDTH;
     }
 }
 
@@ -176,7 +176,7 @@ uint64_t get_final_address(uint64_t virt_address, uint64_t *entrences_vec)
             if (cur_address == 0)
                 {
                     word_t frame = find_frame (page_num, prev_address);
-                    create_new_table(dest_adress, frame)
+                    create_new_table(dest_adress, frame);
                     prev_address = frame;
                 }
             else
@@ -187,11 +187,11 @@ uint64_t get_final_address(uint64_t virt_address, uint64_t *entrences_vec)
     PMread (prev_address * PAGE_SIZE + entrences_vec[1], &cur_address);
     if (cur_address == 0)
         {
-            uint64_t num_frame = restore_page (pageNumber, prev_address);
+            uint64_t num_frame = restore_page (page_num, prev_address);
             PMwrite (prev_address * PAGE_SIZE + entrences_vec[1], (word_t) num_frame);
             prev_address = num_frame;
         }
-      else
+    else
         {
               prev_address = cur_address;
         }
